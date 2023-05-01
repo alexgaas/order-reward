@@ -39,6 +39,7 @@ func NewRouter(app *AppHandler) *chi.Mux {
 
 	router.Group(func(r chi.Router) {
 		r.Post("/api/user/register", app.Register)
+		r.Post("/api/user/login", app.Register)
 	})
 
 	return router
@@ -76,6 +77,37 @@ func (app *AppHandler) Register(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	rw.Header().Set("Authorization", token)
+	rw.WriteHeader(http.StatusOK)
+	_, err = rw.Write([]byte(""))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *AppHandler) Login(rw http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user := domain.User{}
+
+	if err := json.Unmarshal(body, &user); err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if user.Login == "" || user.Password == "" {
+		http.Error(rw, "wrong body format", http.StatusBadRequest)
+		return
+	}
+
+	token, err := usecase.New(app.Storage).LoginUser(r.Context(), user)
 
 	rw.Header().Set("Authorization", token)
 	rw.WriteHeader(http.StatusOK)

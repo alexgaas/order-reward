@@ -18,7 +18,7 @@ type test struct {
 	err  error
 }
 
-func CreateUser(t *testing.T) (*usecase.UsersUseCase, *MockRepository) {
+func MakeUser(t *testing.T) (*usecase.UsersUseCase, *MockRepository) {
 	t.Helper()
 
 	mockCtl := gomock.NewController(t)
@@ -34,7 +34,7 @@ func CreateUser(t *testing.T) (*usecase.UsersUseCase, *MockRepository) {
 func TestCreateUser(t *testing.T) {
 	t.Parallel()
 
-	createUser, repo := CreateUser(t)
+	createUser, repo := MakeUser(t)
 
 	// user model for repo call
 	testRepoUser := domain.User{
@@ -86,6 +86,59 @@ func TestCreateUser(t *testing.T) {
 			tc.mock()
 
 			res, err := createUser.RegisterUser(context.Background(), testUsecaseUser)
+
+			require.Exactly(t, res, tc.res)
+			require.ErrorIs(t, err, tc.err)
+		})
+	}
+}
+
+func TestLoginUser(t *testing.T) {
+	t.Parallel()
+
+	createUser, repo := MakeUser(t)
+
+	// user model for repo call
+	testRepoUser := domain.User{
+		Login:    "test_user",
+		Password: "test_password",
+	}
+	// user model for use case call
+	testUsecaseUser := testRepoUser
+
+	// user model for repo call must have hidden password already
+	auth.HashPassword(&testRepoUser)
+
+	tokenToValidate, _ := auth.GetToken(testUsecaseUser)
+
+	tests := []test{
+		{
+			name: "invalid login/password",
+			mock: func() {
+				repo.EXPECT().GetUser(context.Background(), testRepoUser.Login).Return(nil, repository.ErrInvalidLoginPassword)
+			},
+			res: "",
+			err: repository.ErrInvalidLoginPassword,
+		},
+		{
+			name: "user has been created successfully",
+			mock: func() {
+				repo.EXPECT().GetUser(context.Background(), testRepoUser.Login).Return(&testRepoUser, nil)
+			},
+			res: tokenToValidate,
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc.mock()
+
+			res, err := createUser.LoginUser(context.Background(), testUsecaseUser)
 
 			require.Exactly(t, res, tc.res)
 			require.ErrorIs(t, err, tc.err)

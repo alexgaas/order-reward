@@ -92,6 +92,33 @@ Response Codes:
 - `409` — The specified login already exists in the system.
 - `500` — An internal server error has occurred.
 
+#### **User Login**
+
+Handler: `POST /api/user/login`.
+
+This API handler is used to authenticate a user with a unique login and password.
+Upon successful authentication, the service returns authentication information as a response.
+The following request specification should be followed:
+
+Request Specification:
+
+```
+POST /api/user/login HTTP/1.1
+Content-Type: application/json
+...
+
+{
+	"login": "<login>",
+	"password": "<password>"
+}
+```
+
+Response Codes:
+
+- `200` — The user has been successfully authenticated.
+- `400` — The request is incorrect or malformed.
+- `500` — An internal server error has occurred.
+
 #### **Add Order Number**
 
 Handler: `POST /api/user/orders`.

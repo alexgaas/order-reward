@@ -27,7 +27,14 @@ func (uc *UsersUseCase) RegisterUser(ctx context.Context, user domain.User) (str
 	if err != nil {
 		return "", err
 	}
-	// validate user in
+
+	return uc.LoginUser(ctx, user)
+}
+
+func (uc *UsersUseCase) LoginUser(ctx context.Context, user domain.User) (string, error) {
+	// hash incoming password to match with hash in database
+	auth.HashPassword(&user)
+
 	dbUser, err := uc.repo.GetUser(ctx, user.Login)
 	if err != nil {
 		return "", err
