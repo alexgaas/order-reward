@@ -11,13 +11,18 @@ type Repository struct {
 	DB *gorm.DB
 }
 
+// New -.
+func New(conn *gorm.DB) *Repository {
+	return &Repository{DB: conn}
+}
+
 func NewDB(dsn string) (Repository, error) {
 	conn, err := gorm.Open(
 		sqlite.Open(dsn),
 		&gorm.Config{},
 	)
 
-	return Repository{DB: conn}, err
+	return *New(conn), err
 }
 
 func (db *Repository) CloseDB() error {
@@ -46,7 +51,7 @@ func (db *Repository) CreateUser(ctx context.Context, user domain.User) error {
 		return ErrUserAlreadyExists
 	}
 
-	return dbContext.Create(user).Error
+	return dbContext.Create(&user).Error
 }
 
 func (db *Repository) GetUser(ctx context.Context, login string) (*domain.User, error) {

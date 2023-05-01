@@ -7,17 +7,28 @@ import (
 	"github.com/alexgaas/order-reward/internal/usecase/auth"
 )
 
-func CreateUser(ctx context.Context, storage *repository.Repository, user domain.User) (string, error) {
+type UsersUseCase struct {
+	repo Repository
+}
+
+// New -.
+func New(r Repository) *UsersUseCase {
+	return &UsersUseCase{
+		repo: r,
+	}
+}
+
+func (uc *UsersUseCase) RegisterUser(ctx context.Context, user domain.User) (string, error) {
 	// save only hash of password in database
 	auth.HashPassword(&user)
 
 	// create user
-	err := storage.CreateUser(ctx, user)
+	err := uc.repo.CreateUser(ctx, user)
 	if err != nil {
 		return "", err
 	}
 	// validate user in
-	dbUser, err := storage.GetUser(ctx, user.Login)
+	dbUser, err := uc.repo.GetUser(ctx, user.Login)
 	if err != nil {
 		return "", err
 	}

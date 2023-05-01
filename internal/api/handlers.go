@@ -64,7 +64,7 @@ func (app *AppHandler) Register(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := usecase.CreateUser(r.Context(), app.Storage, user)
+	token, err := usecase.New(app.Storage).RegisterUser(r.Context(), user)
 	if err != nil {
 		if errors.Is(err, repository.ErrInvalidLoginPassword) {
 			http.Error(rw, err.Error(), http.StatusUnauthorized)
