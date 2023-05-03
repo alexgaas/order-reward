@@ -1,11 +1,11 @@
-package usecase_test
+package users_usecase_test
 
 import (
 	"context"
 	"github.com/alexgaas/order-reward/internal/domain"
 	repository "github.com/alexgaas/order-reward/internal/repo"
-	"github.com/alexgaas/order-reward/internal/usecase"
 	"github.com/alexgaas/order-reward/internal/usecase/auth"
+	users "github.com/alexgaas/order-reward/internal/usecase/users"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -18,15 +18,15 @@ type test struct {
 	err  error
 }
 
-func MakeUser(t *testing.T) (*usecase.UsersUseCase, *MockRepository) {
+func MakeUser(t *testing.T) (*users.UsersUseCase, *users.MockRepository) {
 	t.Helper()
 
 	mockCtl := gomock.NewController(t)
 	defer mockCtl.Finish()
 
-	repo := NewMockRepository(mockCtl)
+	repo := users.NewMockRepository(mockCtl)
 
-	userCase := usecase.New(repo)
+	userCase := users.New(repo)
 
 	return userCase, repo
 }

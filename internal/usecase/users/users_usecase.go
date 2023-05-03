@@ -1,11 +1,11 @@
-package usecase
+package users_usecase
 
 import (
 	"context"
 	"github.com/alexgaas/order-reward/internal/domain"
 )
 
-//go:generate mockgen -source=interfaces.go -destination=./mocks_test.go -package=usecase_test
+//go:generate mockgen -source=interfaces.go -destination=./mocks_test.go -package=users_usecase
 
 type (
 	// Repository -.

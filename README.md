@@ -6,12 +6,12 @@ For detailed technical specifications, please refer to the [SPECIFICATION.md](ht
 ### API Endpoints:
 
 * `POST /api/user/register` — User registration.
-* `POST /api/user/login` — User authentication.
-* `POST /api/user/orders` — Add an order number for accrual operations.
-* `GET /api/user/orders` — Retrieve a list of user order numbers, including their processing status and accrual information.
-* `GET /api/user/balance` — Get the reward balance for the user.
-* `POST /api/user/balance/withdraw` — Request to withdraw points from the loyal reward account as part of a new order process.
-* `GET /api/user/withdrawals` — Retrieve information about loyal reward account withdrawal operations.
+* `POST /api/user/login` — User login.
+* `POST /api/orders` — Add an order number for accrual operations.
+* `GET /api/orders` — Retrieve a list of user order numbers, including their processing status and accrual information.
+* `GET /api/balance` — Get the reward balance for the user.
+* `POST /api/balance/withdraw` — Request to withdraw points from the loyal reward account as part of a new order process.
+* `GET /api/balance/withdrawals` — Retrieve information about loyal reward account withdrawal operations.
 
 ### Build and Run
 
@@ -27,7 +27,7 @@ Usage of ./app:
   -a string
         Address of application, for example: http://localhost:8000
   -d string
-        Database connection string, for example: root:admin@tcp(127.0.0.1:3306)/order_reward
+        Database connection string (sqlite), for example: order_reward.db
   -r string
         Accrual system address, for example: http://localhost:8080
 ```
