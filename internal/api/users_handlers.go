@@ -72,7 +72,7 @@ func (app *AppHandler) Login(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := users.New(app.Storage).LoginUser(r.Context(), user)
+	token, err := users.New(app.Storage).LoginUser(r.Context(), user, true)
 
 	rw.Header().Set("Authorization", token)
 	rw.WriteHeader(http.StatusOK)

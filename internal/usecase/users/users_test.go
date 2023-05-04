@@ -14,7 +14,7 @@ import (
 type test struct {
 	name string
 	mock func()
-	res  interface{}
+	res  string
 	err  error
 }
 
@@ -34,7 +34,7 @@ func MakeUser(t *testing.T) (*users.UsersUseCase, *users.MockRepository) {
 func TestCreateUser(t *testing.T) {
 	t.Parallel()
 
-	createUser, repo := MakeUser(t)
+	makeUser, repo := MakeUser(t)
 
 	// user model for repo call
 	testRepoUser := domain.User{
@@ -85,7 +85,7 @@ func TestCreateUser(t *testing.T) {
 
 			tc.mock()
 
-			res, err := createUser.RegisterUser(context.Background(), testUsecaseUser)
+			res, err := makeUser.RegisterUser(context.Background(), testUsecaseUser)
 
 			require.Exactly(t, res, tc.res)
 			require.ErrorIs(t, err, tc.err)
@@ -138,7 +138,7 @@ func TestLoginUser(t *testing.T) {
 
 			tc.mock()
 
-			res, err := createUser.LoginUser(context.Background(), testUsecaseUser)
+			res, err := createUser.LoginUser(context.Background(), testUsecaseUser, true)
 
 			require.Exactly(t, res, tc.res)
 			require.ErrorIs(t, err, tc.err)

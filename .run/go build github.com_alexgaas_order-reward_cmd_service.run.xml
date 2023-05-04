@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="go build github.com/alexgaas/order-reward/cmd/service" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+    <module name="order-reward" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="ACCRUAL_SYSTEM_ADDRESS" value="localhost:8080" />
+      <env name="DATABASE_URI" value="order_reward.db" />
+      <env name="RUN_ADDRESS" value="localhost:8000" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="github.com/alexgaas/order-reward/cmd/service" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/service/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

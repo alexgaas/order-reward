@@ -5,7 +5,7 @@ import (
 	"github.com/alexgaas/order-reward/internal/domain"
 )
 
-//go:generate mockgen -source=interfaces.go -destination=./mocks_test.go -package=users_usecase
+//go:generate mockgen -source=users_usecase.go -destination=./mocks_test.go -package=users_usecase
 
 type (
 	// Repository -.
