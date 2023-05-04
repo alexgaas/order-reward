@@ -35,20 +35,6 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
-// CreateOrder mocks base method.
-func (m *MockRepository) CreateOrder(ctx context.Context, login string, order domain.Order) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateOrder", ctx, login, order)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreateOrder indicates an expected call of CreateOrder.
-func (mr *MockRepositoryMockRecorder) CreateOrder(ctx, login, order interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*MockRepository)(nil).CreateOrder), ctx, login, order)
-}
-
 // GetOrders mocks base method.
 func (m *MockRepository) GetOrders(ctx context.Context, login string) ([]domain.Order, error) {
 	m.ctrl.T.Helper()
@@ -62,4 +48,18 @@ func (m *MockRepository) GetOrders(ctx context.Context, login string) ([]domain.
 func (mr *MockRepositoryMockRecorder) GetOrders(ctx, login interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrders", reflect.TypeOf((*MockRepository)(nil).GetOrders), ctx, login)
+}
+
+// SaveOrder mocks base method.
+func (m *MockRepository) SaveOrder(ctx context.Context, login string, order domain.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveOrder", ctx, login, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveOrder indicates an expected call of SaveOrder.
+func (mr *MockRepositoryMockRecorder) SaveOrder(ctx, login, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveOrder", reflect.TypeOf((*MockRepository)(nil).SaveOrder), ctx, login, order)
 }

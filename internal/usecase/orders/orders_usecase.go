@@ -10,7 +10,7 @@ import (
 type (
 	// Repository -.
 	Repository interface {
-		CreateOrder(ctx context.Context, login string, order domain.Order) error
+		SaveOrder(ctx context.Context, login string, order domain.Order) error
 		GetOrders(ctx context.Context, login string) ([]domain.Order, error)
 	}
 )

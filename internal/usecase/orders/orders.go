@@ -26,6 +26,26 @@ func (uc *OrdersUseCase) GetOrders(ctx context.Context, login string) ([]domain.
 	return orders, err
 }
 
+func (uc *OrdersUseCase) CreateOrder(ctx context.Context, login string, orderNumber string) error {
+	if !IsOrderNumValid(orderNumber) {
+		return ErrOrderNumberIsNotValid
+	}
+
+	select {
+	case <-ctx.Done():
+		return nil
+	default:
+		order := domain.Order{
+			Number: orderNumber,
+			Status: "NEW",
+		}
+		if err := uc.repo.SaveOrder(ctx, login, order); err != nil {
+			return err
+		}
+		return nil
+	}
+}
+
 func MapOrdersToOrderResponse(orders []domain.Order) []domain.OrderResponse {
 	orderResp := make([]domain.OrderResponse, 0)
 	for _, order := range orders {
@@ -41,4 +61,13 @@ func MapOrdersToOrderResponse(orders []domain.Order) []domain.OrderResponse {
 	}
 
 	return orderResp
+}
+
+// IsOrderNumValid - Func check number according Luhn algorithm
+func IsOrderNumValid(number string) bool {
+	err := Validate(number)
+	if err != nil {
+		return false
+	}
+	return true
 }

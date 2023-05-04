@@ -20,7 +20,7 @@ func (db *Repository) GetOrders(ctx context.Context, login string) ([]domain.Ord
 	return orders, err
 }
 
-func (db *Repository) CreateOrder(ctx context.Context, login string, order domain.Order) error {
+func (db *Repository) SaveOrder(ctx context.Context, login string, order domain.Order) error {
 	dbOrders := db.DB.WithContext(ctx)
 	user, err := db.GetUser(ctx, login)
 	if err != nil {

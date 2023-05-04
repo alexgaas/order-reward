@@ -39,6 +39,7 @@ func NewRouter(app *AppHandler) *chi.Mux {
 	router.Group(func(r chi.Router) {
 		r.Use(Authenticator)
 		r.Get("/api/orders", app.GetOrders)
+		r.Post("/api/orders", app.PostOrder)
 	})
 
 	return router

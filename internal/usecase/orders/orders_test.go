@@ -5,6 +5,7 @@ import (
 	"github.com/alexgaas/order-reward/internal/domain"
 	repository "github.com/alexgaas/order-reward/internal/repo"
 	orders "github.com/alexgaas/order-reward/internal/usecase/orders"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -16,6 +17,7 @@ type test struct {
 	mock func()
 	res  []domain.Order
 	err  error
+	num  string
 }
 
 func MakeOrder(t *testing.T) (*orders.OrdersUseCase, *orders.MockRepository) {
@@ -96,6 +98,53 @@ func TestGetOrders(t *testing.T) {
 	}
 }
 
+func TestCreateOrder(t *testing.T) {
+	t.Parallel()
+
+	makeOrder, repo := MakeOrder(t)
+
+	testLogin := "test_login"
+
+	validOrderNumber := "12345678903"
+	invalidOrderNumber := "987654321"
+
+	order := domain.Order{
+		Number: validOrderNumber,
+		Status: "NEW",
+	}
+
+	tests := []test{
+		{
+			name: "order number is not valid",
+			num:  invalidOrderNumber,
+			mock: func() {},
+			err:  orders.ErrOrderNumberIsNotValid,
+		},
+		{
+			name: "user has been created successfully",
+			num:  validOrderNumber,
+			mock: func() {
+				repo.EXPECT().SaveOrder(context.Background(), testLogin, order).Return(nil)
+			},
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc.mock()
+
+			err := makeOrder.CreateOrder(context.Background(), testLogin, tc.num)
+
+			require.ErrorIs(t, err, tc.err)
+		})
+	}
+}
+
 func TestMapOrdersToOrderResponse(t *testing.T) {
 	mockedOrders := MockOrders()
 
@@ -114,4 +163,12 @@ func TestMapOrdersToOrderResponse(t *testing.T) {
 		time.Unix(mockedOrders[0].UploadedAt, 0).Format(time.RFC3339))
 	require.Exactly(t, orderResponses[0].UploadedAt,
 		time.Unix(mockedOrders[1].UploadedAt, 0).Format(time.RFC3339))
+}
+
+func TestIsOrderNumValid(t *testing.T) {
+	validOrderNumber := "12345678903"
+	invalidOrderNumber := "987654321"
+
+	require.Exactly(t, orders.IsOrderNumValid(validOrderNumber), true)
+	require.Exactly(t, orders.IsOrderNumValid(invalidOrderNumber), false)
 }

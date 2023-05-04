@@ -5,6 +5,7 @@ import (
 	"errors"
 	repository "github.com/alexgaas/order-reward/internal/repo"
 	orders "github.com/alexgaas/order-reward/internal/usecase/orders"
+	"io"
 	"net/http"
 )
 
@@ -35,5 +36,41 @@ func (app *AppHandler) GetOrders(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
 
+func (app *AppHandler) PostOrder(rw http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	bodyStr := string(body)
+
+	login := r.Header.Get("Login")
+
+	contentType := r.Header.Get("Content-type")
+	if contentType != "text/plain" || bodyStr == "" {
+		http.Error(rw, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	if err := orders.New(app.Storage).CreateOrder(r.Context(), login, bodyStr); err != nil {
+		if errors.Is(err, repository.ErrOrderExists) {
+			http.Error(rw, "Order exists", http.StatusOK)
+			return
+		}
+		if errors.Is(err, repository.ErrOrderExistsAnother) {
+			http.Error(rw, "Order exists", http.StatusConflict)
+			return
+		}
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	rw.WriteHeader(http.StatusAccepted)
+	_, err = rw.Write([]byte(""))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
