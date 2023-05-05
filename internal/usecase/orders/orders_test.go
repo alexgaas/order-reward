@@ -13,11 +13,12 @@ import (
 )
 
 type test struct {
-	name string
-	mock func()
-	res  []domain.Order
-	err  error
-	num  string
+	name        string
+	mock        func()
+	res         []domain.Order
+	err         error
+	num         string
+	orderLogSum float64
 }
 
 func MakeOrder(t *testing.T) (*orders.OrdersUseCase, *orders.MockRepository) {
@@ -54,6 +55,16 @@ func MockOrders() []domain.Order {
 	}
 }
 
+func MockOrderLog(sum float64, orderNumber string) domain.OrderLog {
+	return domain.OrderLog{
+		ID:          1,
+		UserID:      1,
+		OrderNumber: orderNumber,
+		Sum:         sum,
+		ProcessedAt: time.Now().Unix(),
+	}
+}
+
 func TestGetOrders(t *testing.T) {
 	t.Parallel()
 
@@ -73,7 +84,7 @@ func TestGetOrders(t *testing.T) {
 			err: repository.ErrNoOrders,
 		},
 		{
-			name: "user has been created successfully",
+			name: "get orders successfully",
 			mock: func() {
 				repo.EXPECT().GetOrders(context.Background(), testLogin).Return(mockedOrders, nil)
 			},
@@ -121,7 +132,7 @@ func TestCreateOrder(t *testing.T) {
 			err:  orders.ErrOrderNumberIsNotValid,
 		},
 		{
-			name: "user has been created successfully",
+			name: "create order successfully",
 			num:  validOrderNumber,
 			mock: func() {
 				repo.EXPECT().SaveOrder(context.Background(), testLogin, order).Return(nil)
@@ -139,6 +150,61 @@ func TestCreateOrder(t *testing.T) {
 			tc.mock()
 
 			err := makeOrder.CreateOrder(context.Background(), testLogin, tc.num)
+
+			require.ErrorIs(t, err, tc.err)
+		})
+	}
+}
+
+func TestWithdrawOrder(t *testing.T) {
+	t.Parallel()
+
+	makeOrder, repo := MakeOrder(t)
+
+	testLogin := "test_login"
+
+	validOrderNumber := "12345678903"
+	invalidOrderNumber := "987654321"
+
+	tests := []test{
+		{
+			name:        "negative sum",
+			num:         invalidOrderNumber,
+			orderLogSum: 10.0,
+			mock: func() {
+				repo.EXPECT().WithdrawOrder(context.Background(), testLogin, MockOrderLog(10, validOrderNumber)).Return(nil)
+			},
+			err: orders.ErrOrderNumberIsNotValid,
+		},
+		{
+			name:        "negative sum",
+			num:         validOrderNumber,
+			orderLogSum: -10.0,
+			mock: func() {
+				repo.EXPECT().WithdrawOrder(context.Background(), testLogin, MockOrderLog(-10, validOrderNumber)).Return(nil)
+			},
+			err: orders.ErrNegativeSum,
+		},
+		{
+			name:        "withdraw order successfully",
+			num:         validOrderNumber,
+			orderLogSum: 10.0,
+			mock: func() {
+				repo.EXPECT().WithdrawOrder(context.Background(), testLogin, MockOrderLog(10, validOrderNumber)).Return(nil)
+			},
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc.mock()
+
+			err := makeOrder.WithdrawOrder(context.Background(), testLogin, MockOrderLog(tc.orderLogSum, tc.num))
 
 			require.ErrorIs(t, err, tc.err)
 		})

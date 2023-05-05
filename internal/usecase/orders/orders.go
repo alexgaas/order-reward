@@ -46,6 +46,18 @@ func (uc *OrdersUseCase) CreateOrder(ctx context.Context, login string, orderNum
 	}
 }
 
+func (uc *OrdersUseCase) WithdrawOrder(ctx context.Context, login string, orderLog domain.OrderLog) error {
+	if orderLog.Sum <= 0 {
+		return ErrNegativeSum
+	}
+
+	if !IsOrderNumValid(orderLog.OrderNumber) {
+		return ErrOrderNumberIsNotValid
+	}
+
+	return uc.repo.WithdrawOrder(ctx, login, orderLog)
+}
+
 func MapOrdersToOrderResponse(orders []domain.Order) []domain.OrderResponse {
 	orderResp := make([]domain.OrderResponse, 0)
 	for _, order := range orders {

@@ -63,3 +63,17 @@ func (mr *MockRepositoryMockRecorder) SaveOrder(ctx, login, order interface{}) *
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveOrder", reflect.TypeOf((*MockRepository)(nil).SaveOrder), ctx, login, order)
 }
+
+// WithdrawOrder mocks base method.
+func (m *MockRepository) WithdrawOrder(ctx context.Context, login string, orderLog domain.OrderLog) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WithdrawOrder", ctx, login, orderLog)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// WithdrawOrder indicates an expected call of WithdrawOrder.
+func (mr *MockRepositoryMockRecorder) WithdrawOrder(ctx, login, orderLog interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WithdrawOrder", reflect.TypeOf((*MockRepository)(nil).WithdrawOrder), ctx, login, orderLog)
+}

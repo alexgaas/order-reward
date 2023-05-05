@@ -42,9 +42,9 @@ API Endpoints:
 * `POST /api/user/login` — User authentication.
 * `POST /api/orders` — Add an order number for accrual operations.
 * `GET /api/orders` — Retrieve a list of user order numbers, including their processing status and accrual information.
+* `POST /api/orders/withdraw` — Request to withdraw points from the loyal reward account as part of a new order process.
+* `GET /api/orders/withdrawals` — Retrieve information about loyal reward account withdrawal operations.
 * `GET /api/balance` — Get the reward balance for the user.
-* `POST /api/balance/withdraw` — Request to withdraw points from the loyal reward account as part of a new order process.
-* `GET /api/balance/withdrawals` — Retrieve information about loyal reward account withdrawal operations.
 
 Non-functional (technical) requirements:
 

@@ -8,3 +8,5 @@ var ErrInvalidLoginPassword = errors.New("invalid login/password")
 var ErrNoOrders = errors.New("orders not found")
 var ErrOrderExists = errors.New("order have been uploaded before")
 var ErrOrderExistsAnother = errors.New("order have been uploaded before by another user")
+
+var ErrNotEnoughFunds = errors.New("not enough funds")

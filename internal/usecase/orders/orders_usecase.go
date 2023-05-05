@@ -12,5 +12,6 @@ type (
 	Repository interface {
 		SaveOrder(ctx context.Context, login string, order domain.Order) error
 		GetOrders(ctx context.Context, login string) ([]domain.Order, error)
+		WithdrawOrder(ctx context.Context, login string, orderLog domain.OrderLog) error
 	}
 )

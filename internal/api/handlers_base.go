@@ -41,6 +41,7 @@ func NewRouter(app *AppHandler) *chi.Mux {
 		r.Use(Authenticator)
 		r.Get("/api/orders", app.GetOrders)
 		r.Post("/api/orders", app.PostOrder)
+		r.Post("/api/orders/withdraw", app.Withdraw)
 		r.Get("/api/balance", app.GetBalance)
 	})
 

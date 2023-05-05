@@ -74,7 +74,6 @@ func TestPostOrderHappyPath(t *testing.T) {
 		Expect().Status().Equal(http.StatusAccepted),
 	)
 
-	//
 	Test(t,
 		Description("Add an order number for accrual operations"),
 		Post(base.BasePath+"orders"),

@@ -44,7 +44,7 @@ func TestGetOrders(t *testing.T) {
 
 	tests := []test{
 		{
-			name: "user has been created successfully",
+			name: "get orders successfully",
 			mock: func() {
 				repo.EXPECT().GetBalance(context.Background(), testLogin).Return(&mockBalance, nil)
 			},

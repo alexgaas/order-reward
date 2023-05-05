@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"github.com/alexgaas/order-reward/internal/domain"
 	repository "github.com/alexgaas/order-reward/internal/repo"
 	orders "github.com/alexgaas/order-reward/internal/usecase/orders"
 	"io"
@@ -68,6 +69,43 @@ func (app *AppHandler) PostOrder(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rw.WriteHeader(http.StatusAccepted)
+	_, err = rw.Write([]byte(""))
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (app *AppHandler) Withdraw(rw http.ResponseWriter, r *http.Request) {
+	login := r.Header.Get("Login")
+
+	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var orderLog domain.OrderLog
+	if err := json.Unmarshal(body, &orderLog); err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err = orders.New(app.Storage).WithdrawOrder(r.Context(), login, orderLog); err != nil {
+		if errors.Is(err, repository.ErrNotEnoughFunds) {
+			http.Error(rw, err.Error(), http.StatusPaymentRequired)
+			return
+		}
+		if errors.Is(err, orders.ErrOrderNumberIsNotValid) || errors.Is(err, orders.ErrNegativeSum) {
+			http.Error(rw, err.Error(), http.StatusBadRequest)
+			return
+		}
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
 	_, err = rw.Write([]byte(""))
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
