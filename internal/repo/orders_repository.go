@@ -39,3 +39,18 @@ func (db *Repository) SaveOrder(ctx context.Context, login string, order domain.
 	}
 	return dbOrders.Create(&order).Error
 }
+
+func (db *Repository) GetOrderLog(ctx context.Context, login string) ([]domain.OrderLog, error) {
+	dbOrderList := db.DB.WithContext(ctx)
+	orders := make([]domain.OrderLog, 0)
+	user, err := db.GetUser(ctx, login)
+	if err != nil {
+		return orders, err
+	}
+
+	err = dbOrderList.Where("user_id = ?", user.ID).Find(&orders).Error
+	if len(orders) == 0 {
+		return orders, ErrNoOrders
+	}
+	return orders, err
+}

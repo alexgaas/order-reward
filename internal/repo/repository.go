@@ -37,5 +37,6 @@ func (db *Repository) InitDB() error {
 	return db.DB.AutoMigrate(
 		domain.User{},
 		domain.Order{},
+		domain.OrderLog{},
 	)
 }

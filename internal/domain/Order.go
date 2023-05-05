@@ -15,3 +15,11 @@ type OrderResponse struct {
 	Accrual    float64 `json:"accrual,omitempty"`
 	UploadedAt string  `json:"uploaded_at"`
 }
+
+type OrderLog struct {
+	ID          uint    `gorm:"primaryKey" sql:"AUTO_INCREMENT" json:"-"`
+	UserID      uint    `json:"-"`
+	OrderNumber string  `json:"order"`
+	Sum         float64 `json:"sum"`
+	ProcessedAt int64   `gorm:"autoCreateTime" json:"processed_at"`
+}
