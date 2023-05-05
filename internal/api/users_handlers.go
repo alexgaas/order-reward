@@ -73,6 +73,14 @@ func (app *AppHandler) Login(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := users.New(app.Storage).LoginUser(r.Context(), user, true)
+	if err != nil {
+		if errors.Is(err, repository.ErrInvalidLoginPassword) {
+			http.Error(rw, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	rw.Header().Set("Authorization", token)
 	rw.WriteHeader(http.StatusOK)

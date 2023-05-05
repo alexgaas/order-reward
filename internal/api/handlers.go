@@ -33,7 +33,7 @@ func NewRouter(app *AppHandler) *chi.Mux {
 
 	router.Group(func(r chi.Router) {
 		r.Post("/api/user/register", app.Register)
-		r.Post("/api/user/login", app.Register)
+		r.Post("/api/user/login", app.Login)
 	})
 
 	router.Group(func(r chi.Router) {

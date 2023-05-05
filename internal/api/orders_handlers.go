@@ -57,11 +57,11 @@ func (app *AppHandler) PostOrder(rw http.ResponseWriter, r *http.Request) {
 
 	if err := orders.New(app.Storage).CreateOrder(r.Context(), login, bodyStr); err != nil {
 		if errors.Is(err, repository.ErrOrderExists) {
-			http.Error(rw, "Order exists", http.StatusOK)
+			http.Error(rw, err.Error(), http.StatusOK)
 			return
 		}
 		if errors.Is(err, repository.ErrOrderExistsAnother) {
-			http.Error(rw, "Order exists", http.StatusConflict)
+			http.Error(rw, err.Error(), http.StatusConflict)
 			return
 		}
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
