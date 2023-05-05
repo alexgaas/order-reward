@@ -1,8 +1,11 @@
 package integration_test
 
 import (
+	"encoding/json"
 	"fmt"
 	base "github.com/alexgaas/order-reward/integration-test"
+	"github.com/alexgaas/order-reward/internal/domain"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"testing"
 
@@ -59,12 +62,28 @@ func TestLoginHappyPath(t *testing.T) {
 		"password": "test_%s"
 	}`, randomLogin, randomPassword)
 	Test(t,
+		Description("User registration"),
+		Post(base.BasePath+"user/register"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusOK),
+	)
+
+	var res string
+
+	MustDo(
 		Description("User login"),
 		Post(base.BasePath+"user/login"),
 		Send().Headers("Content-Type").Add("application/json"),
 		Send().Body().String(body),
 		Expect().Status().Equal(http.StatusOK),
+		Store().Response().Body().String().In(&res),
 	)
+
+	var loginResponse domain.LoginResponse
+	_ = json.Unmarshal([]byte(res), &loginResponse)
+
+	require.NotEmpty(t, loginResponse.Authtoken)
 }
 
 func TestLogin_Invalid_User(t *testing.T) {

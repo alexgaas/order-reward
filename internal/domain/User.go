@@ -5,3 +5,7 @@ type User struct {
 	Login    string `gorm:"uniqueIndex:idx_logins" json:"login"`
 	Password string `json:"password,omitempty"`
 }
+
+type LoginResponse struct {
+	Authtoken string `json:"auth_token"`
+}

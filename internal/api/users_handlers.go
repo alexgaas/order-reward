@@ -82,9 +82,15 @@ func (app *AppHandler) Login(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	resp, err := json.Marshal(domain.LoginResponse{Authtoken: token})
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	rw.Header().Set("Authorization", token)
 	rw.WriteHeader(http.StatusOK)
-	_, err = rw.Write([]byte(""))
+	_, err = rw.Write(resp)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return

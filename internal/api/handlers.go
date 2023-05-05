@@ -30,6 +30,7 @@ func NewAppHandler(config config.Config, logger *log.Logger) (*AppHandler, error
 
 func NewRouter(app *AppHandler) *chi.Mux {
 	router := chi.NewRouter()
+	router.Use(GzipMiddle)
 
 	router.Group(func(r chi.Router) {
 		r.Post("/api/user/register", app.Register)
