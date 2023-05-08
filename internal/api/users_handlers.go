@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"github.com/alexgaas/order-reward/internal/domain"
@@ -18,7 +19,12 @@ func (app *AppHandler) Register(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := domain.User{}
+	user := domain.User{
+		Account: domain.Account{Balance: sql.NullFloat64{
+			Float64: float64(0),
+			Valid:   true,
+		}},
+	}
 
 	if err := json.Unmarshal(body, &user); err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)

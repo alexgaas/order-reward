@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"github.com/alexgaas/order-reward/internal/api"
 	"github.com/alexgaas/order-reward/internal/config"
+	"github.com/alexgaas/order-reward/internal/dispatcher"
 	"log"
 	"net/http"
 	"os"
@@ -25,6 +27,17 @@ func main() {
 	if err := app.Storage.InitDB(); err != nil {
 		logger.Fatalln(err)
 	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	d := dispatcher.Dispatcher{
+		Storage:        app.Storage,
+		Logger:         logger,
+		AccrualAddress: appConfig.AccrualAddress,
+	}
+
+	go d.Run(ctx)
 
 	router := api.NewRouter(app)
 	logger.Println("App is waiting connections on: ", appConfig.AppAddress)

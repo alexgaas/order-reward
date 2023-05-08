@@ -38,5 +38,6 @@ func (db *Repository) InitDB() error {
 		domain.User{},
 		domain.Order{},
 		domain.OrderLog{},
+		domain.Account{},
 	)
 }

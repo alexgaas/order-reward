@@ -1,0 +1,38 @@
+{
+  "data": {
+    "pairs": [
+      {
+        "response": {
+          "status": 200,
+          "encodedBody": false,
+          "templated": false,
+          "body": "{\n  \"order\": \"12345678903\",\n  \"status\": \"PROCESSED\",\n  \"accrual\": 500\n}",
+          "headers": {
+            "Content-Type": [
+              "application/json"
+            ]
+          }
+        },
+        "request": {
+          "path": [
+            {
+              "matcher": "glob",
+              "value": "*/orders/12345678903"
+            }
+          ],
+          "method": [
+            {
+              "matcher": "exact",
+              "value": "GET"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "meta": {
+    "schemaVersion": "v5",
+    "hoverflyVersion": "v1.5.2",
+    "timeExported": "2022-05-80T12:00:00+01:00"
+  }
+}

@@ -91,7 +91,6 @@ func TestPostOrder_Uploaded_By_Another_User(t *testing.T) {
 
 	validNumber := orders.Generate(11)
 
-	// add new order
 	Test(t,
 		Description("Add an order number for accrual operations"),
 		Post(base.BasePath+"orders"),
@@ -101,7 +100,6 @@ func TestPostOrder_Uploaded_By_Another_User(t *testing.T) {
 		Expect().Status().Equal(http.StatusAccepted),
 	)
 
-	//
 	Test(t,
 		Description("Add an order number for accrual operations"),
 		Post(base.BasePath+"orders"),

@@ -1,6 +1,10 @@
 # Technical specification
 
-## Order Loyalty System Service
+## Accrual Loyalty Service
+
+The "Accrual Loyalty Service" (hereafter referred to as "the Service") is a service that is described in the specification below. 
+The Service must call the "Loyalty Points Calculation Service" (hereafter referred to as "the Points"), 
+which is a third-party API used for collecting rewards in the processing of accrual.
 
 ---
 
@@ -304,9 +308,9 @@ Response Codes:
 - `401` — The user has not been authenticated.
 - `500` — An internal server error has occurred.
 
-### Communication with Order Loyalty System
+### Communication with Loyalty Points Calculation Service
 
-Handler: `GET /api/orders/{number}`. 
+Handler: `GET /orders/{number}`. 
 
 This handler retrieves data about reward processing of accrual.
 

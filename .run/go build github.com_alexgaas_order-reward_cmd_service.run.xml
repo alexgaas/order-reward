@@ -3,7 +3,7 @@
     <module name="order-reward" />
     <working_directory value="$PROJECT_DIR$" />
     <envs>
-      <env name="ACCRUAL_SYSTEM_ADDRESS" value="localhost:8080" />
+      <env name="ACCRUAL_SYSTEM_ADDRESS" value="http://localhost:8500" />
       <env name="DATABASE_URI" value="order_reward.db" />
       <env name="RUN_ADDRESS" value="localhost:8000" />
     </envs>

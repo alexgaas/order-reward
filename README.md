@@ -29,7 +29,7 @@ Usage of ./app:
   -d string
         Database connection string (sqlite), for example: order_reward.db
   -r string
-        Accrual system address, for example: http://localhost:8080
+        Accrual system address, for example: http://localhost:8000
 ```
 
 Once you start the application, it will create all the necessary tables in the database to operate.
@@ -38,3 +38,4 @@ Once you start the application, it will create all the necessary tables in the d
 * Golang
 * Microservices
 * REST API
+* Hoverfly
