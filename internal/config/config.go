@@ -26,8 +26,8 @@ type environ struct {
 func GetAppFlags() Flags {
 	flags := Flags{}
 	flag.StringVar(&flags.appAddress, "a", "", "Address application, for example: http://localhost:8000")
-	flag.StringVar(&flags.databaseDSN, "d", "", "Address application, for example: root:admin@tcp(127.0.0.1:3306)/order_reward")
-	flag.StringVar(&flags.accrualAddress, "r", "", "Accrual application, for example: http://localhost:8080")
+	flag.StringVar(&flags.databaseDSN, "d", "", "Address application, for example: order_reward.db")
+	flag.StringVar(&flags.accrualAddress, "r", "", "Accrual application, for example: http://localhost:8500")
 	flag.Parse()
 	return flags
 }

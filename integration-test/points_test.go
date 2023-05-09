@@ -14,6 +14,8 @@ import (
 
 // before starting that integration tests you have to:
 /*
+install hoverfly
+
 start hoverfly as webserver:
 	hoverctl start webserver
 
