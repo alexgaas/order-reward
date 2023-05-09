@@ -168,7 +168,7 @@ func TestWithdrawOrder(t *testing.T) {
 
 	tests := []test{
 		{
-			name:        "negative sum",
+			name:        "order number is not valid",
 			num:         invalidOrderNumber,
 			orderLogSum: 10.0,
 			mock: func() {
@@ -211,6 +211,56 @@ func TestWithdrawOrder(t *testing.T) {
 	}
 }
 
+func TestWithdrawals(t *testing.T) {
+	t.Parallel()
+
+	makeOrder, repo := MakeOrder(t)
+
+	testLogin := "test_login"
+
+	validOrderNumber := "12345678903"
+
+	orderLogs := []domain.OrderLog{
+		MockOrderLog(100.0, validOrderNumber),
+	}
+
+	tests := []test{
+		{
+			name:        "orders not found",
+			orderLogSum: 10.0,
+			mock: func() {
+				repo.EXPECT().GetOrderLog(context.Background(), testLogin).Return(nil, repository.ErrNoOrders)
+			},
+			err: repository.ErrNoOrders,
+		},
+		{
+			name:        "retrieve withdraw order log successfully",
+			orderLogSum: 10.0,
+			mock: func() {
+				repo.EXPECT().GetOrderLog(context.Background(), testLogin).Return(orderLogs, nil)
+			},
+			err: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc.mock()
+
+			resp, err := makeOrder.Withdrawals(context.Background(), testLogin)
+
+			if resp != nil {
+				require.Exactly(t, resp, orders.OrderLogsTimeFormat(orderLogs))
+			}
+			require.ErrorIs(t, err, tc.err)
+		})
+	}
+}
+
 func TestMapOrdersToOrderResponse(t *testing.T) {
 	mockedOrders := MockOrders()
 
@@ -237,4 +287,17 @@ func TestIsOrderNumValid(t *testing.T) {
 
 	require.Exactly(t, orders.IsOrderNumValid(validOrderNumber), true)
 	require.Exactly(t, orders.IsOrderNumValid(invalidOrderNumber), false)
+}
+
+func TestOrderLogsTimeFormat(t *testing.T) {
+	validOrderNumber := "12345678903"
+
+	orderLogs := []domain.OrderLog{
+		MockOrderLog(100.0, validOrderNumber),
+	}
+
+	resp := orders.OrderLogsTimeFormat(orderLogs)
+
+	require.Exactly(t, resp[0].OrderNumber, validOrderNumber)
+	require.Exactly(t, resp[0].ProcessedAt, time.Unix(orderLogs[0].ProcessedAt, 0).Format(time.RFC3339))
 }

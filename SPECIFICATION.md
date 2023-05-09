@@ -125,7 +125,7 @@ Response Codes:
 
 #### **Add Order Number**
 
-Handler: `POST /api/user/orders`.
+Handler: `POST /api/orders`.
 
 This endpoint is only available to authenticated users. 
 The order number is a number sequence of random length that can be validated for correctness using the Luhn algorithm. 
@@ -134,7 +134,7 @@ The following request specification should be followed:
 Request Specification:
 
 ```
-POST /api/user/orders HTTP/1.1
+POST /api/orders HTTP/1.1
 Content-Type: text/plain
 ...
 
@@ -153,7 +153,7 @@ Response Codes:
 
 #### **Get List Of Orders**
 
-Handler: `GET /api/user/orders`.
+Handler: `GET /api/orders`.
 
 This endpoint is only available to authenticated users.
 The response must include the order number sorted in descending order, with the newest on top. 
@@ -169,7 +169,7 @@ The following are the available statuses to manage accrual of rewards:
 Request Specification:
 
 ```
-GET /api/user/orders HTTP/1.1
+GET /api/orders HTTP/1.1
 Content-Length: 0
 ```
 
@@ -208,7 +208,7 @@ Response Codes:
 
 #### **Get User Reward Balance**
 
-Handler: `GET /api/user/balance`.
+Handler: `GET /api/balance`.
 
 This endpoint is only accessible to authenticated users. 
 The response will include the current reward balance and the total sum of rewards used over the entire period of reward activity.
@@ -216,7 +216,7 @@ The response will include the current reward balance and the total sum of reward
 Request Specification:
 
 ```
-GET /api/user/balance HTTP/1.1
+GET /api/balance HTTP/1.1
 Content-Length: 0
 ```
 
@@ -242,7 +242,7 @@ Response codes:
 
 #### **Request Balance Withdrawal**
 
-Handler: `POST /api/user/balance/withdraw`
+Handler: `POST /api/orders/withdraw`
 
 This handler is available only to authenticated users. Users can specify the order number and the sum of points 
 they want to withdraw in the request body, where order is an abstract order number used to partially or fully pay using rewards, 
@@ -253,7 +253,7 @@ Please note that there is no need to use any external API or make any external c
 Request Specification:
 
 ```
-POST /api/user/balance/withdraw HTTP/1.1
+POST /api/orders/withdraw HTTP/1.1
 Content-Type: application/json
 
 {
@@ -272,7 +272,7 @@ Response Codes:
 
 #### **Get Withdraw Information**
 
-Handler: `GET /api/user/balance/withdrawals`.
+Handler: `GET /api/orders/withdrawals`.
 
 This handler is available only to authenticated users. 
 Withdrawals in response must be sorted out from newest to oldest by date. Date format - RFC3339.
@@ -280,7 +280,7 @@ Withdrawals in response must be sorted out from newest to oldest by date. Date f
 Request Specification:
 
 ```
-GET /api/user/withdrawals HTTP/1.1
+GET /api/orders/withdrawals HTTP/1.1
 Content-Length: 0
 ```
 
@@ -317,7 +317,7 @@ This handler retrieves data about reward processing of accrual.
 Request Specification:
 
 ```
-GET /api/orders/{number} HTTP/1.1
+GET /orders/{number} HTTP/1.1
 Content-Length: 0
 ```
 

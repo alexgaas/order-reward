@@ -35,6 +35,21 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// GetOrderLog mocks base method.
+func (m *MockRepository) GetOrderLog(ctx context.Context, login string) ([]domain.OrderLog, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrderLog", ctx, login)
+	ret0, _ := ret[0].([]domain.OrderLog)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrderLog indicates an expected call of GetOrderLog.
+func (mr *MockRepositoryMockRecorder) GetOrderLog(ctx, login interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderLog", reflect.TypeOf((*MockRepository)(nil).GetOrderLog), ctx, login)
+}
+
 // GetOrders mocks base method.
 func (m *MockRepository) GetOrders(ctx context.Context, login string) ([]domain.Order, error) {
 	m.ctrl.T.Helper()

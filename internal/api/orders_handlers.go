@@ -112,3 +112,31 @@ func (app *AppHandler) Withdraw(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (app *AppHandler) Withdrawals(rw http.ResponseWriter, r *http.Request) {
+	login := r.Header.Get("Login")
+
+	orderLogs, err := orders.New(app.Storage).Withdrawals(r.Context(), login)
+	if err != nil {
+		if errors.Is(err, repository.ErrNoOrders) {
+			http.Error(rw, err.Error(), http.StatusNoContent)
+			return
+		}
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	resp, err := json.Marshal(orderLogs)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusOK)
+	_, err = rw.Write(resp)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}

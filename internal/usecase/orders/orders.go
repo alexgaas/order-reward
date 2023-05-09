@@ -58,6 +58,18 @@ func (uc *OrdersUseCase) WithdrawOrder(ctx context.Context, login string, orderL
 	return uc.repo.WithdrawOrder(ctx, login, orderLog)
 }
 
+func (uc *OrdersUseCase) Withdrawals(ctx context.Context, login string) ([]domain.OrderLogResponse, error) {
+	orderLogs, err := uc.repo.GetOrderLog(ctx, login)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := OrderLogsTimeFormat(orderLogs)
+
+	return resp, err
+}
+
 func MapOrdersToOrderResponse(orders []domain.Order) []domain.OrderResponse {
 	orderResp := make([]domain.OrderResponse, 0)
 	for _, order := range orders {
@@ -82,4 +94,17 @@ func IsOrderNumValid(number string) bool {
 		return false
 	}
 	return true
+}
+
+func OrderLogsTimeFormat(orders []domain.OrderLog) []domain.OrderLogResponse {
+	orderLogResp := make([]domain.OrderLogResponse, 0)
+	for _, order := range orders {
+		orderLogResp = append(orderLogResp, domain.OrderLogResponse{
+			OrderNumber: order.OrderNumber,
+			Sum:         order.Sum,
+			ProcessedAt: time.Unix(order.ProcessedAt, 0).Format(time.RFC3339),
+		})
+	}
+
+	return orderLogResp
 }
