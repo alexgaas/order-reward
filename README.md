@@ -1,6 +1,7 @@
-# Order Reward System 
+# Accrual Loyalty Service
 
-This is a Golang test assessment. 
+Accrual Loyalty Service - Golang microservice example based on concept of Clean Architecture.
+
 For detailed technical specifications, please refer to the [SPECIFICATION.md](https://github.com/alexgaas/order-reward/blob/main/SPECIFICATION.md) file.
 
 ### API Endpoints:
@@ -36,6 +37,8 @@ Once you start the application, it will create all the necessary tables in the d
 
 ### Tags:
 * Golang
+* Clean Architecture
+* Test driven design
 * Microservices
 * REST API
-* Hoverfly
+* [Hoverfly](https://docs.hoverfly.io/en/latest/) (for integration tests)
