@@ -20,7 +20,7 @@ type Config struct {
 type environ struct {
 	AppAddress     string `env:"RUN_ADDRESS" envDefault:"localhost:8000"`
 	AccrualAddress string `env:"ACCRUAL_SYSTEM_ADDRESS" envDefault:"localhost:8080"`
-	DatabaseDSN    string `env:"DATABASE_URI" envDefault:"root:admin@tcp(127.0.0.1:3306)/order_reward"`
+	DatabaseDSN    string `env:"DATABASE_URI" envDefault:"order_reward.db"`
 }
 
 func GetAppFlags() Flags {
